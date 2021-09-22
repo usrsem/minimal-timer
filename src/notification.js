@@ -19,3 +19,9 @@ const timerFinishedMessage = (timer) => {
 
     new Notification(NOTIFICATION_TITLE, { body: NOTIFICATION_BODY })
 };
+
+const timerCanceledMessage = (timer) => {
+    const NOTIFICATION_TITLE = `Timer ${timer.getName()} canceled`;
+
+    new Notification(NOTIFICATION_TITLE)
+};

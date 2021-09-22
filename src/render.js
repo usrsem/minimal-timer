@@ -41,34 +41,42 @@ timerForm.addEventListener('submit', async (event) => {
     // Clear form after submiting
     timerForm.reset();
 
-    // Creating new li element for list
-    const timerLi = document.createElement('li');
-    
-    timerLi.setAttribute('id', timer.getId());
-    timerLi.innerHTML = getTextForTimer(
-        timer.getName(),
-        timer.getHours(),
-        timer.getMinutes(),
-        timer.getSeconds()
-    );
-
     // Adding timer element to queue
-    document.getElementById('timers-list').appendChild(timerLi);
-
+    document.getElementById('timers-list').appendChild(createTimerListElement(timer));
 
     const countDownTime = Date.now() + timer.getTimeInMillis();
-
 
     clockInterval(updateClock, countDownTime, timer);
 
 })
 
+function createTimerListElement(timer) {
+    const li = document.createElement('li');
+    li.setAttribute('id', timer.getId());
+
+    const name = document.createElement('h4');
+    name.innerHTML = timer.getName();
+
+    const time = document.createElement('p');
+    time.innerHTML = getTextForTimer(timer.getHours(), timer.getMinutes(), timer.getSeconds());
+    const btn = document.createElement('button');
+    btn.innerHTML = `Cancel`;
+
+    btn.addEventListener('click', () => li.remove());
+
+    li.appendChild(name);
+    li.appendChild(time);
+    li.appendChild(btn);
+
+    return li;
+}
+
 function pad(num) {
     return ('0' + num).slice(-2);
 }
 
-function getTextForTimer(n, h, m, s) {
-    return `Name: ${n}<br>Time: ${pad(h)}:${pad(m)}:${pad(s)}`
+function getTextForTimer(h, m, s) {
+    return `${pad(h)}:${pad(m)}:${pad(s)}`
 }
 
 function updateClock(countDownTime, timer) {
@@ -79,7 +87,12 @@ function updateClock(countDownTime, timer) {
     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    document.getElementById(timer.getId()).innerHTML = getTextForTimer(timer.getName(), hours, minutes, seconds); 
+    const timerElement = document.getElementById(timer.getId()); 
+
+    if (timerElement === null) {
+        return -1;
+    }
+    timerElement.getElementsByTagName('p')[0].innerHTML = getTextForTimer(hours, minutes, seconds); 
     return distance;
 }
 
@@ -90,11 +103,22 @@ function clockInterval(fn, countDownTime, timer) {
         if (fn(countDownTime, timer) > 0) {
             clockInterval(fn, countDownTime, timer);
         } else {
-            // Send notification about timer passing
-            timerFinishedMessage(timer);
-            // Delete timer event from list
-            document.getElementById(timer.getId()).remove();
+            try {
+                // Delete timer event from list
+                document.getElementById(timer.getId()).remove();
+                // Send notification about timer passing
+                timerFinishedMessage(timer);
+            } catch(e) {
+                timerCanceledMessage(timer);
+            }
             
         }
     }, time);
 }
+
+
+// TODO: Cancel timer
+// TODO: Add shortcuts
+// TODO: Add regular timers
+// TODO: Pomodorro mode
+// TODO: Import timetable
