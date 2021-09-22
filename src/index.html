@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Best Timer</title>
+    <link rel="stylesheet" href="index.css">
+
+    <script defer src="render.js"></script>
+    <script src="notification.js"></script>
+  </head>
+  <body>
+    <h1>Timer will be here tomorrow</h1>
+
+    <!-- Form for setting timer -->
+    <form id="timer-data-form" name="timer-data-form">
+        <input type="tetx" id="timer-name" placeholder="null">
+        <input type="text" id="timer-hours" placeholder="00" size="2" pattern="(\d)|(1\d)(2[01234])|(0\d)">
+        :
+        <input type="text" id="timer-minutes" placeholder="00" size="2" pattern="([012345]\d)|(60)|(\d)">
+        :
+        <input type="text" id="timer-seconds" placeholder="00" size="2" pattern="([012345]\d)|(60)|(\d)">
+
+        <input type="submit" value="Submit" id="submit-timer-form">
+    </form>
+
+    <!-- List of running timers -->
+    <h2>My timers</h2>
+    <ul id="timers-list"></ul>
+
+
+    <!-- Theme settings -->
+    <p>Current theme source: <strong id="theme-source">System</strong></p>
+
+    <button id="toggle-dark-mode" class="button is-primary">Toggle Dark Mode</button>
+    <button id="reset-to-system" class="button is-primary">Reset to System Theme</button>
+
+  </body>
+</html>
